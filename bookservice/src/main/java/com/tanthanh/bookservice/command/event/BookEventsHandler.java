@@ -22,19 +22,19 @@ public class BookEventsHandler {
         BeanUtils.copyProperties(event,book);
         bookRepository.save(book);
     }
-//	@EventHandler
-//    public void on(BookUpdatedEvent event) {
-//		 Book book = bookRepository.getById(event.getBookId());
-//	       book.setAuthor(event.getAuthor());
-//	       book.setName(event.getName());
-//	       book.setIsReady(event.getIsReady());
-//	        bookRepository.save(book);
-//    }
-//	@EventHandler
-//    public void on(BookDeletedEvent event) {
-//		
-//	        bookRepository.deleteById(event.getBookId());;
-//    }
+	@EventHandler
+    public void on(BookUpdatedEvent event) {
+		 Book book = bookRepository.getById(event.getBookId());
+	       book.setAuthor(event.getAuthor());
+	       book.setName(event.getName());
+	       book.setIsReady(event.getIsReady());
+	       bookRepository.save(book);
+    }
+	@EventHandler
+    public void on(BookDeletedEvent event) {
+		
+	        bookRepository.deleteById(event.getBookId());;
+    }
 //	@EventHandler
 //	public void on(BookUpdateStatusEvent event) {
 //		Book book = bookRepository.getById(event.getBookId());

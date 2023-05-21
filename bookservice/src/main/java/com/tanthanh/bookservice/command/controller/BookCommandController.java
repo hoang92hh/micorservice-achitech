@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tanthanh.bookservice.command.command.CreateBookCommand;
+import com.tanthanh.bookservice.command.command.DeleteBookCommand;
+import com.tanthanh.bookservice.command.command.UpdateBookCommand;
 import com.tanthanh.bookservice.command.model.BookRequestModel;
 
 @RestController
@@ -29,5 +31,21 @@ public class BookCommandController {
 		commandGateway.sendAndWait(command);
 		return "added Book";
 	}
+	@PutMapping
+	public String upateBook(@RequestBody BookRequestModel model) {
+		UpdateBookCommand command = 
+				new UpdateBookCommand(model.getBookId(),model.getName(), model.getAuthor(), model.getIsReady());
+		commandGateway.sendAndWait(command);
+		return "update Book";
+	}
+	@DeleteMapping("/{bookId}")
+	public String deleteBook(@PathVariable String bookId) {
+		DeleteBookCommand command = 
+				new DeleteBookCommand(bookId);
+		commandGateway.sendAndWait(command);
+		return "delete Book";
+	}
+
+
 
 }
