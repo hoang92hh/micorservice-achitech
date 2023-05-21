@@ -1,0 +1,49 @@
+package com.tanthanh.bookservice.command.aggregate;
+
+import org.axonframework.commandhandling.CommandHandler;
+import org.axonframework.eventsourcing.EventSourcingHandler;
+import org.axonframework.modelling.command.AggregateIdentifier;
+import org.axonframework.modelling.command.AggregateLifecycle;
+import org.axonframework.spring.stereotype.Aggregate;
+import org.springframework.beans.BeanUtils;
+
+import com.tanthanh.bookservice.command.command.CreateBookCommand;
+import com.tanthanh.bookservice.command.event.BookCreatedEvent;
+
+import com.tanthanh.commonservice.command.RollBackStatusBookCommand;
+import com.tanthanh.commonservice.command.UpdateStatusBookCommand;
+import com.tanthanh.commonservice.event.BookRollBackStatusEvent;
+import com.tanthanh.commonservice.event.BookUpdateStatusEvent;
+
+@Aggregate
+public class BookAggregate {
+	
+	@AggregateIdentifier
+	private String bookId;
+	private String name;
+	private String author;
+	private Boolean isReady;
+	
+	 public BookAggregate() {
+		 
+	    }
+	 @CommandHandler
+	    public BookAggregate(CreateBookCommand createBookCommand) {
+	        
+	        BookCreatedEvent bookCreatedEvent
+	                = new BookCreatedEvent();
+	        BeanUtils.copyProperties(createBookCommand,bookCreatedEvent);// coppy all properties of createBookCommand to bookCreatedEvent.
+	        //bookCreatedEvent.setAuthor(createBookCommand.getAuthor());
+	        AggregateLifecycle.apply(bookCreatedEvent);
+	    }
+
+	 //lay du lieu cua doi tuong BookCreatedEvent event va cap nhat lai cho doi tuong BookAggregate 
+	 @EventSourcingHandler
+	    public void on(BookCreatedEvent event) {
+			this.bookId = event.getBookId();
+			this.author = event.getAuthor();
+			this.isReady = event.getIsReady();
+			this.name = event.getName();
+	    }
+
+}
